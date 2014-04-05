@@ -8,10 +8,19 @@ var express = require('express')
   , user = require('./routes/user')
   , recipes = require('./routes/recipes')
   , owned = require('./routes/owned')
+  , names = require('./routes/names')
   , http = require('http')
   , path = require('path');
 
 var app = express();
+
+var allowCrossDomain = function(req, res, next) {
+    res.header('Access-Control-Allow-Origin', "*");
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+    res.header('Access-Control-Allow-Headers', 'Content-Type');
+    next();
+}
+
 
 app.configure(function(){
   app.set('port', process.env.PORT || 3000);
@@ -29,9 +38,18 @@ app.configure('development', function(){
   app.use(express.errorHandler());
 });
 
+
+app.all('*', function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "X-Requested-With");
+  next();
+ });
+
 app.get('/', routes.index);
 app.get('/users', user.list);
-app.get('/owned/:platform/:id', owned.taken)
+app.get('/owned/:platform/:id', owned.taken);
+app.get('/brand/generator', names.autogen);
+
 http.createServer(app).listen(app.get('port'), function(){
   console.log("Express server listening on port " + app.get('port'));
 });
