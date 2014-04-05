@@ -47,7 +47,7 @@ var service_404_check = function(url, callback) {
       }
     }).on("error", function(e){
         console.log("Error");
-        callback(true);
+        callback(false);
     });
 }
 
@@ -95,7 +95,7 @@ var github_search = function(twitterHandle, callback) {
     service_404_check(url, callback);
 }
 
-var github_search = function(twitterHandle, callback) {
+var pinterest_search = function(twitterHandle, callback) {
     var url = "http://pinterest.com/" + twitterHandle;
     service_404_check(url, callback);
 }
