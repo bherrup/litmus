@@ -1,5 +1,6 @@
 var http = require('follow-redirects').http;
-
+var FB = require('fb');
+FB.setAccessToken(process.env.FBTOKEN);
 
 var domain_search = function (domain, callback) {
     var apiKey = "856469aece773c464c6eefa268e80e6e";
@@ -27,7 +28,12 @@ var domain_search = function (domain, callback) {
 }
 
 var facebook_search = function(fbhandle, callback) {
-
+    FB.api(fbhandle, function (res) {
+      if(!res || res.error) {
+          callback(false);
+      }
+      callback(true);
+    });
 }
 
 var service_404_check = function(url, callback) {
@@ -104,7 +110,9 @@ exports.taken = function (req, res) {
             }
         });
     } else if(req.params.platform == "facebook") {
-          res.json({success: false});
+          facebook_search(req.params.id, function(exists) {
+              res.json({success: true, taken: exists});
+          });
     } else if(req.params.platform == "twitter") {
         twitter_search(req.params.id, function(exists) {
           res.json({success: true, taken: exists});
@@ -114,7 +122,7 @@ exports.taken = function (req, res) {
           res.json({success: true, taken: exists});
         });
     } else if(req.params.platform == "google") {
-          res.json({success: false});
+          res.json({success: true, taken: false});
     } else if(req.params.platform == "instagram") {
         instagram_search(req.params.id, function(exists) {
           res.json({success: true, taken: exists});
