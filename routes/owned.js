@@ -114,9 +114,9 @@ exports.taken = function (req, res) {
               res.json({success: true, taken: exists});
           });
     } else if(req.params.platform == "twitter") {
-        twitter_search(req.params.id, function(exists) {
-          res.json({success: true, taken: exists});
-        });
+        // twitter_search(req.params.id, function(exists) {
+          res.json({success: true, taken: false});
+        // });
     } else if(req.params.platform == "pinterest") {
         pinterest_search(req.params.id, function(exists) {
           res.json({success: true, taken: exists});
